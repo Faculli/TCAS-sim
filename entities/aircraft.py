@@ -4,7 +4,11 @@ class Aircraft:
         self.pos = pos
         self.speed = speed
         self.heading = heading
-        self.newAltitude = new_altitude
+
+        if new_altitude is None:
+            self.new_altitude = self.pos.z
+        else:
+            self.new_altitude = new_altitude
 
     #def update_pos(self, delta_time):
 

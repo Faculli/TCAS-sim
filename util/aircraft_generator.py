@@ -1,5 +1,6 @@
 import random
 from entities.aircraft import Aircraft
+from entities.position import Position
 
 
 class AircraftGenerator:
@@ -7,17 +8,19 @@ class AircraftGenerator:
     AIRLINES = ["AZU", "TAM", "GLO", "AAL", "AFR"]
     ALTITUDES = [range(0, 40000, 1000)]
 
-    @staticmethod
-    def generate_single():
-        callsign = f"{random.choice(AircraftGenerator.AIRLINES)}{random.randint(1000, 9999)}"
-        x = random.uniform(-50, 50)
-        y = random.uniform(-50, 50)
-        altitude = random.choice(AircraftGenerator.ALTITUDES)
+    @classmethod
+    def generate_single(cls) -> Aircraft:
+        callsign = f"{random.choice(cls.AIRLINES)}{random.randint(1000, 9999)}"
+        pos = Position(
+            x = random.uniform(-50, 50),
+            y = random.uniform(-50, 50),
+            z = random.choice(cls.ALTITUDES)
+        )
         heading = random.randint(0, 359)
         speed = random.uniform(100, 450)
 
-        return Aircraft(callsign, x, y, altitude, heading, speed)
+        return Aircraft(callsign=callsign, pos=pos, speed=speed, heading=heading)
 
-    @staticmethod
-    def generate_batch(count: int):
-        return [AircraftGenerator.generate_single() for _ in range(count)]
+    @classmethod
+    def generate_batch(cls, count: int) -> list[Aircraft]:
+        return [cls.generate_single() for _ in range(count)]
