@@ -1,0 +1,4 @@
+class Parameters:
+    MIN_HORIZONTAL_SEPARATION = 5.0 #NM (nautical miles)
+    MIN_VERTICAL_SEPARATION = 1000 #FEET
+    UPDATE_TIME = 1.0 #SECONDS
