@@ -23,7 +23,7 @@ class Simulator:
         conflicts = self.radar.detect_conflict(self.aircraft_list)
 
         if conflicts:
-            print(f"\n[TEMPO {self.current_time:.1f}s] CONFLITO(S) DETECTADO(S): {len(conflicts)}")
+            print(f"\n[TIME {self.current_time:.1f}s] CONFLICT(S) DETECTED(S): {len(conflicts)}")
 
             for conflict in conflicts:
                 airc1, airc2, h_dist, v_dist = conflict
