@@ -7,11 +7,11 @@ from config import parameters as p
 from services.tcas_control import TCASControl
 
 class Simulator:
-    def __init__(self, update_time: float = p.UPDATE_TIME, num_aircraft: int = 5):
+    def __init__(self, update_time: float = p.UPDATE_TIME, aircraft_num: int = 5):
         self.update_time = update_time # How many seconds between simulation updates (defined in parameters)
         self.current_time = 0.0
 
-        self.aircraft_list = AircraftGenerator.generate_batch(num_aircraft)
+        self.aircraft_list = AircraftGenerator.generate_batch(aircraft_num)
         self.radar = Radar()
         self.tcas = TCASControl()
 

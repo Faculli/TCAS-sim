@@ -1,8 +1,5 @@
+from services.simulator import Simulator
 
-from config import parameters
-
-from util.aircraft_generator import AircraftGenerator
-
-min_hor_dist = parameters.MIN_HORIZONTAL_SEPARATION
-min_vertical_dist = parameters.MIN_VERTICAL_SEPARATION
-sim_time = parameters.UPDATE_TIME
+if __name__ == "__main__":
+    sim = Simulator(aircraft_num=10)
+    sim.run_cycle(sim_sleep_time=1)

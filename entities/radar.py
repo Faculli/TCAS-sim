@@ -7,10 +7,10 @@ class Radar:
         self.vert_alert_dist = vert_alert_dist
 
     def calc_horizontal_distance(self, airc1, airc2) -> float:
-        return math.sqrt((airc2.x - airc1.x)**2 + (airc2.y - airc1.y)**2)
+        return math.sqrt((airc2.pos.x - airc1.pos.x)**2 + (airc2.pos.y - airc1.pos.y)**2)
 
     def calc_vertical_distance(self, airc1, airc2) -> float:
-        return abs(airc2.y - airc1.y)
+        return abs(airc2.pos.y - airc1.pos.y)
 
     def detect_conflict(self, aircraft_list: list) -> list[tuple]:
         conflict = []
