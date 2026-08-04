@@ -2,8 +2,7 @@ from config import parameters as p
 import math
 
 class Radar:
-    def __init__(self, scan_range, hor_alert_dist: float = p.MIN_HORIZONTAL_SEPARATION, vert_alert_dist: float = p.MIN_VERTICAL_SEPARATION):
-        self.scan_range = scan_range
+    def __init__(self, hor_alert_dist: float = p.MIN_HORIZONTAL_SEPARATION, vert_alert_dist: float = p.MIN_VERTICAL_SEPARATION):
         self.hor_alert_dist = hor_alert_dist
         self.vert_alert_dist = vert_alert_dist
 
