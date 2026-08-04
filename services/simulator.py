@@ -15,10 +15,27 @@ class Simulator:
         self.radar = Radar()
         self.tcas = TCASControl()
 
+    # Test feature to verify aircraft attributes
+    def print_aircraft_status(self):
+        print(f"\n--- AIRCRAFT STATUS (TIME: {self.current_time:.1f}s) ---")
+        for aircraft in self.aircraft_list:
+            pos = aircraft.pos
+            print(
+                f"[{aircraft.callsign}] "
+                f"Pos: (X: {pos.x:6.2f} NM, Y: {pos.y:6.2f} NM, Z: {pos.z:7.1f} ft) | "
+                f"Tgt Z: {aircraft.new_altitude:7.1f} ft | "
+                f"Spd: {aircraft.speed:5.1f} kt | "
+                f"Hdg: {aircraft.heading:3.0f}° | "
+                f"CD_Rate: {aircraft.cd_rate:6.1f} ft/min"
+            )
+        print("-" * 75)
+
     # Every updated time the sim will run a verification for conflicts and solve them
     def step(self):
         for aircraft in self.aircraft_list:
             aircraft.update_pos(self.update_time)
+
+        self.print_aircraft_status()
 
         conflicts = self.radar.detect_conflict(self.aircraft_list)
 
