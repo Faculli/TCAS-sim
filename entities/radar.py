@@ -1,10 +1,35 @@
+from config import parameters as p
+import math
+
 class Radar:
-    def __init__(self, scan_range, hor_alert_dist, vert_alert_dist):
+    def __init__(self, scan_range, hor_alert_dist: float = p.MIN_HORIZONTAL_SEPARATION, vert_alert_dist: float = p.MIN_VERTICAL_SEPARATION):
         self.scan_range = scan_range
         self.hor_alert_dist = hor_alert_dist
         self.vert_alert_dist = vert_alert_dist
 
-    #def scan_aerial_space(self, aircraft_list):
+    def calc_horizontal_distance(self, airc1, airc2) -> float:
+        return math.sqrt((airc2.x - airc1.x)**2 + (airc2.y - airc1.y)**2)
 
-    #def calc_distance(airc1, airc2):
+    def calc_vertical_distance(self, airc1, airc2) -> float:
+        return abs(airc2.y - airc1.y)
+
+    def detect_conflict(self, aircraft_list: list) -> list[tuple]:
+        conflict = []
+        n = len(aircraft_list)
+
+        # Comparison from 1 aircraft to another without repetition
+        for i in range(n):
+            for j in range(i + 1, n):
+                airc1 = aircraft_list[i]
+                airc2 = aircraft_list[j]
+
+                h_dist = self.calc_horizontal_distance(airc1, airc2)
+                v_dist = self.calc_vertical_distance(airc1, airc2)
+
+                # Aircraft must be close enough for h distance AND unsafe v distance to alert
+                if h_dist < self.hor_alert_dist and v_dist < self.vert_alert_dist:
+                    conflict.append((airc1, airc2, h_dist, v_dist))
+
+        return conflict
+
     
