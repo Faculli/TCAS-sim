@@ -6,15 +6,15 @@ from entities.position import Position
 class AircraftGenerator:
 
     AIRLINES = ["AZU", "TAM", "GLO", "AAL", "AFR"]
-    ALTITUDES = list(range(1000, 40000, 1000))
+    ALTITUDES = list(range(1000, 2000, 1000))
     CD_RATE = [rate for rate in range(-2500, 2500, 500) if rate != 0]
 
     @classmethod
     def generate_single(cls) -> Aircraft:
         callsign = f"{random.choice(cls.AIRLINES)}{random.randint(1000, 9999)}"
         pos = Position(
-            x = random.uniform(-50, 50),
-            y = random.uniform(-50, 50),
+            x = random.uniform(0, 10),
+            y = random.uniform(0, 10),
             z = random.choice(cls.ALTITUDES)
         )
         heading = random.randint(0, 359)
