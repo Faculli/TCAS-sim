@@ -6,7 +6,7 @@ from entities.position import Position
 class AircraftGenerator:
 
     AIRLINES = ["AZU", "TAM", "GLO", "AAL", "AFR"]
-    ALTITUDES = list(range(400, 40000, 1000))
+    ALTITUDES = list(range(1000, 40000, 1000))
     CD_RATE = [rate for rate in range(-2500, 2500, 500) if rate != 0]
 
     @classmethod
