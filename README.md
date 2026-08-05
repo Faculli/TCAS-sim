@@ -6,7 +6,7 @@ A 2D Air Traffic Control (ATC) simulation engine written in Python. The system s
 
 ## 📌 Project Overview
 
-This project simulates airspace operations where multiple aircraft navigate simultaneously. It features a collision detection algorithm based on real-world aviation separation standards ($5.0\text{ NM}$ horizontal and $1,000\text{ ft}$ vertical) and visually represents aircraft telemetry via a 2D ATC radar console interface.
+This project simulates airspace operations where multiple aircraft navigate simultaneously. It features a conflict detection algorithm based on real-world aviation separation standards ($5.0\text{ NM}$ horizontal and $1,000\text{ ft}$ vertical), a critical midair-collision threshold ($0.5\text{ NM}$ horizontal and $200\text{ ft}$ vertical) that freezes the scene on impact, and visually represents aircraft telemetry via a 2D ATC radar console interface.
 
 ---
 
@@ -15,12 +15,14 @@ This project simulates airspace operations where multiple aircraft navigate simu
 - [x] **Modular Object-Oriented Architecture**: Clean separation between entity models (`Aircraft`, `Position`), services (`Radar`, `TCASControl`, `Simulator`), and visualization (`RadarView`).
 - [x] **Kinematics & Physics Engine**: Accurate position updating using trigonometric vector analysis, converted airspeed (knots to NM/s), and climb/descent rates (ft/s).
 - [x] **Radar Conflict Detection**: Real-time detection of loss of separation between aircraft pairs using Euclidean distance formulas for horizontal and vertical airspace parameters.
+- [x] **Midair Collision Detection & Simulation Freeze**: A critical proximity threshold ($< 0.5\text{ NM}$ horizontal and $< 200\text{ ft}$ vertical) flags an actual midair collision, logs it to the console, and puts the simulation into a permanent frozen (resting) state.
 - [x] **Basic Vertical TCAS Resolution**: Automatic resolution advisory (RA) that issues climb/descent orders to conflicting aircraft pairs.
 - [x] **Realistic 2D ATC Radar Console (`Pygame`)**:
   - Distance range rings ($10\text{ NM}$ increments).
   - Dynamic aircraft blips with direction and velocity vector lines.
   - Real-time 3-line flight data blocks (Callsign, Flight Level with climb/descent trend indicators `▲`/`▼`/`═`, and Airspeed/Vertical Speed).
   - Visual conflict warnings (blips and data blocks turn red upon TCAS alert).
+  - Midair collision state: all other traffic is hidden and the colliding pair is greyed out, freezing the scene at the moment of impact.
 - [x] **Configurable Parameters**: Parameterized configuration module for global simulation variables.
 
 ---
@@ -66,9 +68,9 @@ The following tasks and features are currently planned or under development:
 
 ### 🔴 Critical Features (In Progress / Next Steps)
 
-- [ ] **Near-Midair Collision (NMAC) & Hard Impact Detection**:
-  - Implement a critical proximity threshold (e.g., $< 0.5\text{ NM}$ horizontal and $< 200\text{ ft}$ vertical) to log and trigger actual "Midair Collision" alerts.
-  - Ensure collision detection events log cleanly in the terminal console for headless/GUI-less execution on the `main` branch, as well as visually on the 2D ATC radar display.
+- [ ] **Continuous Collision Detection via Closest Point of Approach (CPA)**:
+  - Replace the discrete per-frame distance sampling with a CPA calculation that finds the minimum distance *within* each time step.
+  - Prevents fast-closing aircraft from "tunnelling" through the narrow $0.5\text{ NM}$ collision window between frames, making the midair-collision trigger reliable regardless of speed or update rate.
 
 - [ ] **Advanced Multi-Directional TCAS Logic (Horizontal & Combined Evasion)**:
   - Upgrade `ATCControl` to evaluate surrounding airspace before issuing commands.
