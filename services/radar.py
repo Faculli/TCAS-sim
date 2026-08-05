@@ -27,6 +27,7 @@ class Radar:
 
                 # Aircraft must be close enough for h distance AND unsafe v distance to alert
                 if h_dist < self.hor_alert_dist and v_dist < self.vert_alert_dist:
-                    conflict.append((airc1, airc2, h_dist, v_dist))
+                    is_collision = (h_dist < p.COLLISION_HORIZONTAL_SEPARATION and v_dist < p.COLLISION_VERTICAL_SEPARATION)
+                    conflict.append((airc1, airc2, h_dist, v_dist, is_collision))
 
         return conflict

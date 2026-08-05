@@ -31,6 +31,7 @@ class RadarView:
         self.COLOR_TEXT_GRID = (40, 90, 70)
         self.COLOR_PLANE_NORMAL = (0, 230, 120)
         self.COLOR_PLANE_CONFLICT = (255, 50, 50)
+        self.COLOR_PLANE_COLLISION = (130, 130, 130)
         self.COLOR_DATABLOCK_BG = (15, 25, 30, 180)
 
     # Conversion from NM to pixels
@@ -60,10 +61,8 @@ class RadarView:
 
             current_nm += step_nm
 
-    def _draw_aircraft(self, aircraft, is_in_conflict: bool):
+    def _draw_aircraft(self, aircraft, color):
         px, py = self.nm_to_pixels(aircraft.pos.x, aircraft.pos.y)
-
-        color = self.COLOR_PLANE_CONFLICT if is_in_conflict else self.COLOR_PLANE_NORMAL
 
         # Draws aircraft representation
         pygame.draw.circle(self.screen, color, (px, py), 5)
@@ -109,20 +108,29 @@ class RadarView:
     def render(self):
         self._draw_radar_background()
 
-        # Identify aircraft conflicts
+        # Identify aircraft conflicts and collisions
         conflicts = self.sim.radar.detect_conflict(self.sim.aircraft_list)
         conflicting_aircraft = set()
+        colliding_aircraft = set()
         for c in conflicts:
             conflicting_aircraft.add(c[0])
             conflicting_aircraft.add(c[1])
+            if c[4]:
+                colliding_aircraft.add(c[0])
+                colliding_aircraft.add(c[1])
 
-        # Draws every aircraft
-        for aircraft in self.sim.aircraft_list:
-            is_in_conflict = aircraft in conflicting_aircraft
-            self._draw_aircraft(aircraft, is_in_conflict)
+        if colliding_aircraft:
+            # Collision state: hide all other traffic, draw only the wreckage in gray
+            for aircraft in colliding_aircraft:
+                self._draw_aircraft(aircraft, self.COLOR_PLANE_COLLISION)
+        else:
+            # Draws every aircraft (red if in conflict, green otherwise)
+            for aircraft in self.sim.aircraft_list:
+                color = self.COLOR_PLANE_CONFLICT if aircraft in conflicting_aircraft else self.COLOR_PLANE_NORMAL
+                self._draw_aircraft(aircraft, color)
 
         # Header with simulation general status
-        status_text = f"TIME: {self.sim.current_time:.1f}s | TRAFFIC: {len(self.sim.aircraft_list)} | CONFLICTS: {len(conflicts)}"
+        status_text = f"TIME: {self.sim.current_time:.1f}s | TRAFFIC: {len(self.sim.aircraft_list)} | CONFLICTS: {len(conflicts)} | COLLISIONS: {len(colliding_aircraft) // 2}"
         lbl_status = self.title_font.render(status_text, True, (200, 220, 200))
         self.screen.blit(lbl_status, (15, 15))
 

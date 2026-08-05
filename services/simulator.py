@@ -26,7 +26,11 @@ class Simulator:
             print(f"\n[TIME {self.current_time:.1f}s] CONFLICT(S) DETECTED(S): {len(conflicts)}")
 
             for conflict in conflicts:
-                airc1, airc2, h_dist, v_dist = conflict
+                airc1, airc2, h_dist, v_dist, is_collision = conflict
+
+                if is_collision:
+                    print(f"COLLISION: {airc1.callsign} <-> {airc2.callsign}")
+
                 print(f"  -> {airc1.callsign} <-> {airc2.callsign} | Dist H: {h_dist:.2f} NM | Dist V: {v_dist:.0f} ft")
 
             self.tcas.process_conflict(conflicts)
