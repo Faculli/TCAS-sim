@@ -19,7 +19,7 @@ class Aircraft:
 
         # New positions x and y based on time and speed
         self.pos.x += speed_conversion * delta_time * math.sin(math.radians(self.heading))
-        self.pos.y += speed_conversion * delta_time * math.cos(math.radians(self.heading))
+        self.pos.y -= speed_conversion * delta_time * math.cos(math.radians(self.heading))
 
         # Climb / descent rate conversion from ft/min -> ft/s
         cd_rate_sec = abs(self.cd_rate) / 60.0

@@ -1,6 +1,5 @@
 import time
 
-from entities import aircraft
 from services.radar import Radar
 from util.aircraft_generator import AircraftGenerator
 from config import parameters as p
@@ -10,6 +9,7 @@ class Simulator:
     def __init__(self, update_time: float = p.UPDATE_TIME, aircraft_num: int = 5):
         self.update_time = update_time # How many seconds between simulation updates (defined in parameters)
         self.current_time = 0.0
+        self.collided = False # When True the simulation is frozen (a midair collision happened)
 
         self.aircraft_list = AircraftGenerator.generate_batch(aircraft_num)
         self.radar = Radar()
@@ -17,6 +17,9 @@ class Simulator:
 
     # Every updated time the sim will run a verification for conflicts and solve them
     def step(self):
+        if self.collided:
+            return
+
         for aircraft in self.aircraft_list:
             aircraft.update_pos(self.update_time)
 
@@ -26,10 +29,19 @@ class Simulator:
             print(f"\n[TIME {self.current_time:.1f}s] CONFLICT(S) DETECTED(S): {len(conflicts)}")
 
             for conflict in conflicts:
-                airc1, airc2, h_dist, v_dist = conflict
+                airc1, airc2, h_dist, v_dist, is_collision = conflict
+
+                if is_collision:
+                    self.collided = True
+                    print(f"COLLISION: {airc1.callsign} <-> {airc2.callsign}")
+
                 print(f"  -> {airc1.callsign} <-> {airc2.callsign} | Dist H: {h_dist:.2f} NM | Dist V: {v_dist:.0f} ft")
 
-            self.tcas.process_conflict(conflicts)
+            # Do not reroute aircraft that already crashed
+            if self.collided:
+                print(f"\n[TIME {self.current_time:.1f}s] SIMULATION FROZEN - MIDAIR COLLISION")
+            else:
+                self.tcas.process_conflict(conflicts)
 
         self.current_time += self.update_time
 
