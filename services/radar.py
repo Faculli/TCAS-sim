@@ -10,7 +10,7 @@ class Radar:
         return math.sqrt((airc2.pos.x - airc1.pos.x)**2 + (airc2.pos.y - airc1.pos.y)**2)
 
     def calc_vertical_distance(self, airc1, airc2) -> float:
-        return abs(airc2.pos.y - airc1.pos.y)
+        return abs(airc2.pos.z - airc1.pos.z)
 
     def detect_conflict(self, aircraft_list: list) -> list[tuple]:
         conflict = []
@@ -30,5 +30,3 @@ class Radar:
                     conflict.append((airc1, airc2, h_dist, v_dist))
 
         return conflict
-
-    
