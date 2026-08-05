@@ -1,7 +1,7 @@
 import time
 
 from entities import aircraft
-from entities.radar import Radar
+from services.radar import Radar
 from util.aircraft_generator import AircraftGenerator
 from config import parameters as p
 from services.tcas_control import TCASControl
